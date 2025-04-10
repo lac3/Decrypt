@@ -5,7 +5,6 @@ class GPGDecryptor {
     static func decrypt(data: Data, privateKeyData: Data, passphrase: String) -> Data? {
         do {
             let keys = try ObjectivePGP.readKeys(from: privateKeyData)
-            print("Debug - imported \(keys.count) keys")
             let decrypted = try ObjectivePGP.decrypt(
                 data,
                 andVerifySignature: false,

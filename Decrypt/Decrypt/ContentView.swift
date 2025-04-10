@@ -11,6 +11,7 @@ struct DocumentPicker: UIViewControllerRepresentable {
         let picker = UIDocumentPickerViewController(forOpeningContentTypes: contentTypes)
         picker.delegate = context.coordinator
         picker.allowsMultipleSelection = false
+        picker.shouldShowFileExtensions = true
         return picker
     }
     
@@ -53,6 +54,10 @@ struct DocumentPicker: UIViewControllerRepresentable {
             // Stop accessing the security-scoped resource
             url.stopAccessingSecurityScopedResource()
         }
+        
+        func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+            print("Document picker was cancelled")
+        }
     }
 }
 
@@ -65,66 +70,89 @@ struct ContentView: View {
     @State private var isDecrypting = false
     @State private var showFilePicker = false
     @State private var showKeyPicker = false
+    @FocusState private var isPassphraseFocused: Bool
     
     var body: some View {
-        VStack {
-            Button("Select File to Decrypt") {
-                showFilePicker = true
-            }
-            
-            if let selectedFile = selectedFile {
-                Text("Selected file: \(selectedFile.lastPathComponent)")
-            }
-            
-            Button("Select Private Key") {
-                showKeyPicker = true
-            }
-            
-            if let selectedPrivateKey = selectedPrivateKey {
-                Text("Selected key: \(selectedPrivateKey.lastPathComponent)")
-            }
-            
-            SecureField("Enter passphrase", text: $passphrase)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-            
-            Button("Decrypt") {
-                decryptFile()
-            }
-            .disabled(selectedFile == nil || selectedPrivateKey == nil || passphrase.isEmpty || isDecrypting)
-            
-            if isDecrypting {
-                ProgressView()
-            }
-            
-            if !errorMessage.isEmpty {
-                Text(errorMessage)
-                    .foregroundColor(.red)
-                    .padding()
-            }
-            
-            if !decryptedContent.isEmpty {
-                ScrollView {
-                    Text(decryptedContent)
-                        .font(.system(.body, design: .monospaced))
-                        .padding()
+        NavigationView {
+            Form {
+                Section(header: Text("Files")) {
+                    Button("Select File to Decrypt") {
+                        showFilePicker = true
+                    }
+                    
+                    if let selectedFile = selectedFile {
+                        Text("Selected file: \(selectedFile.lastPathComponent)")
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    Button("Select Private Key") {
+                        showKeyPicker = true
+                    }
+                    
+                    if let selectedPrivateKey = selectedPrivateKey {
+                        Text("Selected key: \(selectedPrivateKey.lastPathComponent)")
+                            .foregroundColor(.secondary)
+                    }
+                }
+                
+                Section(header: Text("Passphrase")) {
+                    SecureField("Enter passphrase", text: $passphrase)
+                        .focused($isPassphraseFocused)
+                        .submitLabel(.done)
+                        .onSubmit {
+                            isPassphraseFocused = false
+                        }
+                }
+                
+                Section {
+                    Button("Decrypt") {
+                        isPassphraseFocused = false
+                        decryptFile()
+                    }
+                    .disabled(selectedFile == nil || selectedPrivateKey == nil || passphrase.isEmpty || isDecrypting)
+                    
+                    if isDecrypting {
+                        ProgressView()
+                    }
+                }
+                
+                if !errorMessage.isEmpty {
+                    Section(header: Text("Error")) {
+                        Text(errorMessage)
+                            .foregroundColor(.red)
+                    }
+                }
+                
+                if !decryptedContent.isEmpty {
+                    Section(header: Text("Decrypted Content")) {
+                        Text(decryptedContent)
+                            .font(.system(.body, design: .monospaced))
+                    }
                 }
             }
-        }
-        .padding()
-        .sheet(isPresented: $showFilePicker) {
-            DocumentPicker(onPick: { url in
-                selectedFile = url
-                errorMessage = ""
-                decryptedContent = ""
-            }, contentTypes: [.data, .text, .plainText])
-        }
-        .sheet(isPresented: $showKeyPicker) {
-            DocumentPicker(onPick: { url in
-                selectedPrivateKey = url
-                errorMessage = ""
-                decryptedContent = ""
-            }, contentTypes: [.data, .text, .plainText])
+            .navigationTitle("GPG Decrypt")
+            .sheet(isPresented: $showFilePicker) {
+                DocumentPicker(onPick: { url in
+                    selectedFile = url
+                    errorMessage = ""
+                    decryptedContent = ""
+                }, contentTypes: [.data, .text, .plainText])
+            }
+            .sheet(isPresented: $showKeyPicker) {
+                DocumentPicker(onPick: { url in
+                    selectedPrivateKey = url
+                    errorMessage = ""
+                    decryptedContent = ""
+                }, contentTypes: [.text, .plainText, .data])
+            }
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("Done") {
+                        isPassphraseFocused = false
+                    }
+                }
+            }
         }
     }
     
