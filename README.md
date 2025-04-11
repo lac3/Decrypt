@@ -47,12 +47,13 @@ This app only supports asymmetric encryption (public/private key). It cannot dec
 
 ### Installing GPG on Mac OS
 
-1. Install Homebrew if you don't have it:
+1. [Install Homebrew](https://docs.brew.sh/Installation) if you don't have it:
    ```bash
    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+   
    ```
 
-2. Install GPG:
+2. Install GnuPG:
    ```bash
    brew install gnupg
    ```
