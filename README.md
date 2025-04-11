@@ -1,4 +1,4 @@
-# GPG Decrypt
+# Decrypt
 
 ## Introduction
 
@@ -14,7 +14,7 @@ This is particularly useful for securely accessing sensitive documents on your i
 
 ## Development Note
 
-This app is written in Swift using mostly [vibe coding](https://en.wikipedia.org/wiki/Vibe_coding) (experimental/iterative development). While it works, some parts of the code might look a bit unconventional. The app uses [ObjectivePGP](https://github.com/krzyzanowskim/ObjectivePGP) for handling GPG encryption/decryption operations.
+This app is written in Swift using mostly [vibe coding](https://en.wikipedia.org/wiki/Vibe_coding). While it works, some parts of the code might look a bit unconventional. The app uses [ObjectivePGP](https://github.com/krzyzanowskim/ObjectivePGP) for handling GPG encryption/decryption operations.
 
 ## Features
 
