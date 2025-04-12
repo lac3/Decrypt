@@ -121,3 +121,7 @@ The app supports the following file types:
 ## License
 
 This project is available under the MIT license. 
+
+## Author
+
+[Laurent Ach](https://ach3d.com)  
