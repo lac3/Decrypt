@@ -19,11 +19,16 @@
                 <string>public.text</string>
                 <string>public.plain-text</string>
                 <string>public.asc</string>
+                <string>com.pgp.gpg</string>
+                <string>org.gnu.gnupg.gpg</string>
+            </array>
+            <key>CFBundleTypeExtensions</key>
+            <array>
+                <string>gpg</string>
+                <string>asc</string>
             </array>
         </dict>
     </array>
-    <key>LSSupportsOpeningDocumentsInPlace</key>
-    <true/>
     <key>UISupportsDocumentBrowser</key>
     <true/>
 </dict>
