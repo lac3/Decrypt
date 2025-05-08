@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support - Decrypt App</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+        }
+        .note {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-left: 4px solid #2c3e50;
+            margin: 20px 0;
+        }
+        code {
+            background-color: #f8f9fa;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>Support - Decrypt App</h1>
+
+    <h2>Introduction</h2>
+    <p>Decrypt is a simple iOS app for decrypting GPG-encrypted files using private keys. It allows you to read on your iPhone, files that have been encrypted on your Mac using GPG.</p>
+
+    <h2>Workflow</h2>
+    <ol>
+        <li>Encrypt a file on your Mac using GPG</li>
+        <li>Transfer the encrypted file and your private key to your iPhone (using iCloud Drive, Dropbox, Google Drive, or any other cloud storage service)</li>
+        <li>Use this app to decrypt and view the file content on your iPhone</li>
+    </ol>
+
+    <div class="note">
+        This is particularly useful for securely accessing sensitive documents on your iPhone without storing the decrypted content permanently on the device.
+    </div>
+
+    <h2>How to Use</h2>
+    <ol>
+        <li>Select the encrypted file you want to decrypt</li>
+        <li>Select your private key file</li>
+        <li>Enter the passphrase for your private key</li>
+        <li>Tap "Decrypt" to decrypt the file</li>
+        <li>The decrypted content will be displayed on screen</li>
+    </ol>
+
+    <h2>File Types</h2>
+    <ul>
+        <li>Encrypted files (.gpg)</li>
+        <li>Private key files (.asc)</li>
+    </ul>
+
+    <h2>About GPG</h2>
+    <p>GPG (GNU Privacy Guard) is a widely used open-source implementation of the OpenPGP standard.</p>
+    <div class="note">
+        This app only supports asymmetric encryption (public/private key). It cannot decrypt files that were encrypted using symmetric encryption (password-only encryption).
+    </div>
+
+    <h2>MacOS Setup Instructions</h2>
+    <h3>Installing GPG on Mac OS</h3>
+    <ol>
+        <li>Install Homebrew if you don't have it:
+            <pre><code>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code></pre>
+        </li>
+        <li>Install GnuPG:
+            <pre><code>brew install gnupg</code></pre>
+        </li>
+    </ol>
+
+    <h3>Creating and Exporting Keys</h3>
+    <ol>
+        <li>Generate a new GPG key:
+            <pre><code>gpg --full-generate-key</code></pre>
+            <ul>
+                <li>Choose option 1 (RSA and RSA)</li>
+                <li>Choose 4096 bits</li>
+                <li>Choose 0 (key does not expire)</li>
+                <li>Enter your name and email</li>
+                <li>Enter a secure passphrase</li>
+            </ul>
+        </li>
+        <li>Export your private key:
+            <pre><code>gpg --export-secret-keys --armor your-email@example.com > private_key.asc</code></pre>
+            <ul>
+                <li>Replace your-email@example.com with the email you used when creating the key</li>
+                <li>Enter your passphrase when prompted</li>
+                <li>The private key will be saved to private_key.asc</li>
+                <li>Transfer this file to your iPhone for use with the app</li>
+            </ul>
+        </li>
+    </ol>
+
+    <h3>Encrypting a file</h3>
+    <pre><code>gpg --encrypt --recipient your-email@example.com your_file.txt</code></pre>
+    <ul>
+        <li>This creates your_file.txt.gpg</li>
+        <li>Transfer this encrypted file to your iPhone for decryption with the app</li>
+    </ul>
+
+    <h3>Decrypting a file on Mac</h3>
+    <pre><code>gpg --decrypt your_file.txt.gpg > decrypted_file.txt</code></pre>
+    <ul>
+        <li>This will prompt for your private key passphrase</li>
+        <li>The decrypted content will be saved to decrypted_file.txt</li>
+    </ul>
+
+    <h2>Transferring files to iPhone</h2>
+    <p>You can transfer the encrypted file and private key to your iPhone using various cloud storage services:</p>
+    <ul>
+        <li>iCloud Drive</li>
+        <li>Dropbox</li>
+        <li>Google Drive</li>
+        <li>OneDrive</li>
+        <li>Or any other cloud storage service that provides iOS file access</li>
+    </ul>
+    <p>Simply upload the files to your preferred service and access them through the Files app on your iPhone when using the GPG Decrypt app.</p>
+
+    <h2>Security</h2>
+    <ul>
+        <li>All file operations use security-scoped resources</li>
+        <li>Passphrase is never stored</li>
+        <li>Files are copied to the app's documents directory for processing</li>
+        <li>Decrypted content is only displayed and not saved to the device</li>
+        <li>No persistent storage of sensitive information</li>
+    </ul>
+
+    <h2>Contact Support</h2>
+    <p>If you need help, please contact us at:<br>
+    <a href="mailto:decrypt@ach3d.com">decrypt@ach3d.com</a></p>
+</body>
+</html> 
