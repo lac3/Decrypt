@@ -125,3 +125,47 @@ This project is available under the MIT license.
 ## Author
 
 [Laurent Ach](https://ach3d.com)  
+
+## Generate a new GPG key
+
+To generate a new GPG key, use the following command in Terminal:
+
+```bash
+gpg --full-generate-key
+```
+
+Follow the prompts to create your key. After generating, you'll need to:
+
+1. Export your public key:
+```bash
+gpg --export -a "YOUR_NAME" > public.key
+```
+
+2. Export your private key:
+```bash
+gpg --export-secret-keys -a "YOUR_NAME" > private.key
+```
+
+**Important Note**: This app does not support AEAD (Authenticated Encryption with Associated Data) on iOS. After generating your key, you should modify its preferences to disable AEAD:
+
+```bash
+gpg --edit-key FINGERPRINT
+gpg> setpref AES256 AES192 AES SHA512 SHA384 SHA256 SHA224 ZLIB BZIP2 ZIP
+```
+
+This will set the following preferences:
+- Cipher: AES256, AES192, AES, 3DES
+- AEAD: (disabled)
+- Digest: SHA512, SHA384, SHA256, SHA224, SHA1
+- Compression: ZLIB, BZIP2, ZIP, Uncompressed
+- Features: MDC, Keyserver no-modify
+
+## Usage
+
+1. Open the app
+2. Select the encrypted file
+3. Select your private key
+4. Enter your passphrase
+5. Click "Decrypt"
+
+The decrypted content will be displayed in the app.  

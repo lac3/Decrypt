@@ -61,6 +61,14 @@ struct DocumentPicker: UIViewControllerRepresentable {
     }
 }
 
+private extension Array {
+    func chunked(into size: Int) -> [[Element]] {
+        return stride(from: 0, to: count, by: size).map {
+            Array(self[$0 ..< Swift.min($0 + size, count)])
+        }
+    }
+}
+
 struct ContentView: View {
     @State private var selectedFile: URL?
     @State private var selectedPrivateKey: URL?
@@ -156,6 +164,27 @@ struct ContentView: View {
         }
     }
     
+    private func hexDump(_ data: Data, prefix: String = "") {
+        let bytesPerLine = 16
+        let maxLines = 5
+        for i in stride(from: 0, to: min(data.count, bytesPerLine * maxLines), by: bytesPerLine) {
+            let lineBytes = data[i..<min(i + bytesPerLine, data.count)]
+            let offset = String(format: "%07x", i)
+            
+            // Convert to array of bytes first
+            let bytes = Array(lineBytes)
+            let hexBytes = stride(from: 0, to: bytes.count, by: 2).map { j in
+                if j + 1 < bytes.count {
+                    return String(format: "%02x%02x", bytes[j+1], bytes[j])
+                } else {
+                    return String(format: "%02x", bytes[j])
+                }
+            }.joined(separator: " ")
+            
+            print("\(prefix)\(offset) \(hexBytes)")
+        }
+    }
+    
     private func decryptFile() {
         guard let fileURL = selectedFile,
               let keyURL = selectedPrivateKey else { return }
@@ -166,7 +195,14 @@ struct ContentView: View {
         
         do {
             let encryptedData = try Data(contentsOf: fileURL)
+            // print("Encrypted file size: \(encryptedData.count) bytes")
+            // print("Encrypted file content:")
+            // hexDump(encryptedData)
+            
             let privateKeyData = try Data(contentsOf: keyURL)
+            // print("\nPrivate key size: \(privateKeyData.count) bytes")
+            // print("Private key content:")
+            // hexDump(privateKeyData)
             
             if let decryptedData = GPGDecryptor.decrypt(data: encryptedData, privateKeyData: privateKeyData, passphrase: passphrase) {
                 if let text = String(data: decryptedData, encoding: .utf8) {
@@ -178,6 +214,7 @@ struct ContentView: View {
                 errorMessage = "Decryption failed"
             }
         } catch {
+            // print("Error details: \(error)")
             errorMessage = "Error: \(error.localizedDescription)"
         }
         
