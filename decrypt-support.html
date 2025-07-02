@@ -91,8 +91,8 @@
             <pre><code>gpg --full-generate-key</code></pre>
             <ul>
                 <li>Choose option 1 (RSA and RSA)</li>
-                <li>Choose 4096 bits</li>
-                <li>Choose 0 (key does not expire)</li>
+                <li>Choose 2048 bits</li>
+                <li>Choose 0 (key does not expire) or a specific expiration date</li>
                 <li>Enter your name and email</li>
                 <li>Enter a secure passphrase</li>
             </ul>
@@ -142,8 +142,38 @@
         <li>No persistent storage of sensitive information</li>
     </ul>
 
+    <h2>Generate a new GPG key</h2>
+
+    <p>1. Install GPG:</p>
+    <pre><code>brew install gnupg</code></pre>
+
+    <p>2. Generate a new key:</p>
+    <pre><code>gpg --full-generate-key</code></pre>
+
+    <p>3. Choose the following options:</p>
+    <ul>
+        <li>Kind of key: RSA and RSA</li>
+        <li>Key size: 2048 bits</li>
+        <li>Key validity: 0 = key does not expire</li>
+        <li>Real name: Your Name</li>
+        <li>Email address: your.email@example.com</li>
+        <li>Comment: (optional)</li>
+        <li>Passphrase: (required)</li>
+    </ul>
+
+    <p><strong>Important for iOS compatibility</strong>: After generating the key, you need to disable AEAD (Authenticated Encryption with Associated Data) as it's not supported at the moment by ObjectivePGP in iOS app. Run:</p>
+    <pre><code>gpg --edit-key FINGERPRINT
+gpg> setpref AES256 AES192 AES SHA512 SHA384 SHA256 SHA224 ZLIB BZIP2 ZIP
+Set preference list to:
+    Cipher: AES256, AES192, AES, 3DES
+    AEAD:
+    Digest: SHA512, SHA384, SHA256, SHA224, SHA1
+    Compression: ZLIB, BZIP2, ZIP, Uncompressed
+    Features: MDC, Keyserver no-modify
+Really update the preferences? (y/N) y</code></pre>
+
     <h2>Contact Support</h2>
     <p>If you need help, please contact us at:<br>
     <a href="mailto:decrypt@ach3d.com">decrypt@ach3d.com</a></p>
 </body>
-</html> 
+</html>
